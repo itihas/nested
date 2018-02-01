@@ -37,7 +37,7 @@ test = Game { players = 3
             }
 
 
-fptp_vote k a = Game { players = k
+fptpVote k a = Game { players = k
                      , states = [State i | i <- [0..a]]
                      , outcomes = [Outcome i | i <- [1..a]]
                      , label = \(State i) -> Outcome i
@@ -49,4 +49,15 @@ fptp_vote k a = Game { players = k
                                                      else State s
                  }
 
+
+
+alternativeVote k a = Game { players = k
+                     , states = [State i | i <- [0..a]]
+                     , outcomes = [Outcome i | i <- [1..a]]
+                     , label = \(State i) -> Outcome i
+                     , playerMoves = \(Player p) (State s) -> if s==0
+                                                              then 3
+                                                              else 0
+                     , transition = \(State s) js -> undefined -- TODO
+                 }
 
