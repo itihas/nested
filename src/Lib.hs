@@ -1,6 +1,8 @@
 module Lib where
 
 import qualified Data.Set as Set
+import Data.List (sort, group, maximumBy)
+import Data.Ord (comparing)
 
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"
@@ -33,4 +35,18 @@ test = Game { players = 3
             , playerMoves = \(Player p) (State s) -> p*s
             , transition = \(State s) as -> State (((product as) * s) `mod` 3)
             }
+
+
+fptp_vote k a = Game { players = k
+                     , states = [State i | i <- [0..a]]
+                     , outcomes = [Outcome i | i <- [1..a]]
+                     , label = \(State i) -> Outcome i
+                     , playerMoves = \(Player p) (State s) -> if s==0
+                                                              then 3
+                                                              else 0
+                     , transition = \(State s) js -> if s==0
+                                                     then State ((maximumBy (comparing length) . group $ sort js)!!0) -- find the mode of player actions
+                                                     else State s
+                 }
+
 
