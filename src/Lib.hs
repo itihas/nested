@@ -43,7 +43,7 @@ fptpVote k a = Game { players = k
                      , outcomes = [Outcome $ show i | i <- [1..a]]
                      , label = \(State i) -> Outcome i
                      , playerMoves = \(Player p) (State s) -> if s=="0"
-                                                              then 3
+                                                              then a
                                                               else 0
                      , transition = \(State s) js -> if s=="0"
                                                      then State $ show ((maximumBy (comparing length) . group $ sort js)!!0) -- find the mode of player actions
@@ -54,27 +54,19 @@ fptpVote k a = Game { players = k
                   -- alternative vote has n levels of m intermediate states each where players express their preferences among the m remaining candidates. It's like iterated last-past-the-post-elimination.
                   -- I wonder if it can be expressed as the composition of last-past-the post eliminations?
 
-lptpElimination :: Int -> Int -> Game
-lptpElimination k a = Game {players = k
-                           , states = [State $ show i | i <- [0..a]]
-                           , outcomes = [Outcome $ show i | i <- [1..a]]
-                           , label = \(State i) -> Outcome i
-                           , playerMoves = \(Player p) (State s) -> if s=="0"
-                                                                    then 3
-                                                                    else 0
-                           , transition = \(State s) js -> if s=="0"
-                                                           then State $ show ((minimumBy (comparing length) . group $ sort js)!!0) -- find the anti-mode of player actions
-                                                           else State s
+lptpElimination :: Int -> Int -> [Game] -> Game
+lptpElimination k a os = Game {players = k
+                              , states = [State $ show i | i <- [0..a]]
+                              , outcomes = os
+                              , label = \(State i) -> Outcome i
+                              , playerMoves = \(Player p) (State s) -> if s=="0"
+                                                                       then a
+                                                                       else 0
+                              , transition = \(State s) js -> if s=="0"
+                                                              then State $ show ((minimumBy (comparing length) . group $ sort js)!!0) -- find the anti-mode of player actions
+                                                              else State s
                            }
-
+  
 alternativeVote :: Int -> Int -> Game
-alternativeVote k a = Game { players = k
-                     , states = [State $  show i | i <- [0..a]]
-                     , outcomes = [Outcome $ show i | i <- [1..a]]
-                     , label = \(State i) -> Outcome i
-                     , playerMoves = \(Player p) (State s) -> if s=="0"
-                                                              then 3
-                                                              else 0
-                     , transition = \(State s) js -> undefined -- TODO
-                 }
+alternativeVote k a = undefined
 
