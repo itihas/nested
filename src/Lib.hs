@@ -24,6 +24,7 @@ data Game = Outcome String
           -- TODO: lots of checks to obey the rules in the comments above
           
 instance Show Game where
+  show (Outcome s) = show s
   show g@(Game _ _ _ _ _ _) = (show $ players g) ++ ", " ++ (show $ states g) ++ ", " ++ (show $ outcomes g)
 
 
