@@ -46,7 +46,7 @@ fptpVote k a = Game { players = k
                                                               then a
                                                               else 0
                      , transition = \(State s) js -> if s=="0"
-                                                     then State $ show ((maximumBy (comparing length) . group $ sort js)!!0) -- find the mode of player actions
+                                                     then State $ show (head (maximumBy (comparing length) . group $ sort js)) -- find the mode of player actions
                                                      else State s
                  }
 
@@ -63,7 +63,7 @@ lptpElimination k a os = Game {players = k
                                                                        then a
                                                                        else 0
                               , transition = \(State s) js -> if s=="0"
-                                                              then State $ show ((minimumBy (comparing length) . group $ sort js)!!0) -- find the anti-mode of player actions
+                                                              then State $ show (head (minimumBy (comparing length) . group $ sort js)) -- find the anti-mode of player actions
                                                               else State s
                            }
   
